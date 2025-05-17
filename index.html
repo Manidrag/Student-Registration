@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <link rel="stylesheet" href="Style.css">
+    
+</head>
+<body>
+    <header>
+        <h1 class="heading">Student Registration</h1>
+        <h2 class="heading">Wecome to Registration Page</h2>
+        <p class="heading_para">This is the Registration Page for the student.
+       Here you can add and delete the students details and edit the student details.</p>
+    </header>
+    
+    <div id="choice">
+    
+    <!--Creating Register And Record Both-->
+       
+    <div >
+        <form >
+            <h2 class="heading" style="background-color:blue; border-radius:10%; padding:5px;">Register</h2>
+          <label for="name"> Student Name
+           </label>
+              <input class="forum" id="name" type="text" placeholder="Enter Name"/>
+            
+             <label for="sid"> Student Id
+                   </label>
+              <input class="forum" id="sid" type="number" min="0" placeholder=" Student ID"/>
+      
+             <label for="inputclass"> Class     
+                </label for="inputclass">
+              <input class="forum" id="inputclass" placeholder="Enter Class"/>
+           
+             <label for="rno"> Roll No
+
+            </label>
+              <input class="forum" id="rno" type="number" min="1" placeholder="Enter RollNo."/>
+              <label for="email">Email</label>
+            <input class="forum" id="email" type="email" placeholder="Enter Email"/>
+        <label for="phone">Phone</label>
+            <input class="forum" id="phone" type="tel" placeholder="Enter Phone Number"/>
+            <label for="address">
+                Address
+            </label>
+               <input class="forum" id="address" type="text" placeholder="Enter Address"/>
+            </label>
+            <button class="Recordbutton" type="submit" id="submit">Register</button>
+        </form>
+    </div>
+           <!--Record Showing-->
+    <div>
+        <h2 class="heading" style="background-color:blue; border-radius:10%; padding:5px;">Student Records</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Student ID</th>
+                        <th>Class</th>
+                        <th>Roll No</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Delete</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody id="studentRecords">
+                    <!-- Student records will be populated here -->
+                </tbody>
+            </table>
+    </div>
+    </div>
+
+    <footer>
+        <p class="footer">Thanks For Visiting</p>
+    </footer>
+<script>
+    //Checking Right input here all Functions
+    function isNameValid(name) {
+        return /^[A-Za-z\s]+$/.test(name);
+    }
+    //digit
+    function isNumberValid(num) {
+        
+        return /^\d+$/.test(num);
+    }
+    function isEmailValid(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+    function isclassValid(classinput) {
+        if (classinput > 12) {
+          
+            return false;
+        }
+        return /^\d{1,2}$/.test(classinput);
+    }
+    function isPhoneValid(phones) {
+       
+        return /^\d{10,12}$/.test(phones); 
+    }
+    function isAddressValid(address) {
+        return address.length > 0;
+    }
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var name = document.querySelector('#name');
+        var sid = document.querySelector('#sid');
+        var classinput = document.querySelector('#inputclass');
+        var rno = document.querySelector('#rno');
+        var email = document.querySelector('#email');
+        var phone = document.querySelector('#phone');
+        var address = document.querySelector('#address');
+
+        // Checking all here 
+        if (
+            name.value.trim() === '' ||
+            sid.value.trim() === '' ||
+            classinput.value.trim() === '' ||
+            rno.value.trim() === '' ||
+            email.value.trim() === '' ||
+            phone.value.trim() === '' ||
+            address.value.trim() === ''
+        ) {
+            alert('Please fill all fields');
+            return;
+        }
+        if (!isNameValid(name.value)) {
+            alert('Student name should contain only letters and spaces.');
+            name.focus();
+            return;
+        }
+        if (!isNumberValid(sid.value)) {
+            alert('Student ID should contain only numbers.');
+            sid.focus();
+            return;
+        }
+        if (!isNumberValid(rno.value)) {
+            alert('Roll No should contain only numbers.');
+            rno.focus();
+            return;
+        }
+        if (!isEmailValid(email.value)) {
+            alert('Please enter a valid email address.');
+            email.focus();
+            return;
+        }
+        if (!isPhoneValid(phone.value)) {
+            alert('Contact No should contain only numbers (10-13 digits).');
+            phone.focus();
+            return;
+        }
+        if (!isAddressValid(address.value)) {
+            alert('Please enter a valid address.');
+            address.focus();
+            return;
+        }
+        if(!isclassValid(classinput.value)){
+            alert('Class should contain numbers only less than equal 12.');
+            classinput.focus();
+            return;
+        }
+
+      //Saving The Register User in the LOcalStorage ==students in array push method
+        var students = JSON.parse(localStorage.getItem('students')) || [];
+
+        // Check for unique Student ID
+        var sidExists = students.some(function(s) {
+            return s.sid === sid.value.trim();
+        });
+        if (sidExists) {
+            alert('Student ID must be unique. This ID already exists.');
+            sid.focus();
+            return;
+        }
+        // Check for unique Email
+        var emailExists = students.some(function(s) {
+            return s.email === email.value.trim();
+        });
+        if (emailExists) {
+            alert('Email must be unique. This email already exists.');
+            email.focus();
+            return;
+        }
+
+        var student = {
+            name: name.value.trim(),
+            sid: sid.value.trim(),
+            classinput: classinput.value.trim(),
+            rno: rno.value.trim(),
+            email: email.value.trim(),
+            phone: phone.value.trim(),
+            address: address.value.trim()
+        };
+        students.push(student);
+        localStorage.setItem('students', JSON.stringify(students));
+        alert('Student registered successfully!');
+        name.value = '';
+        sid.value = '';
+        classinput.value = '';
+        rno.value = '';
+        email.value = '';
+        phone.value = '';
+        address.value = '';
+        displayStudents();
+    });
+  //Showing the Record from LocalStorage
+    function displayStudents() {
+        var students = JSON.parse(localStorage.getItem('students')) || [];
+        var studentRecords = document.querySelector('#studentRecords');
+        studentRecords.innerHTML = '';
+        students.forEach(function(student, index) {
+            var row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${student.name}</td>
+                <td>${student.sid}</td>
+                <td>${student.classinput}</td>
+                <td>${student.rno}</td>
+                <td>${student.email}</td>
+                <td>${student.phone}</td>
+                <td>${student.address}</td>
+                <td><button class="delete" onclick="deleteStudent(${index})">Delete</button></td>
+                <td><button class="edit" onclick="editStudent(${index})">Edit</button></td>
+            `;
+            studentRecords.appendChild(row);
+        });
+    }
+    //Delete table record
+    function deleteStudent(index) {
+        var students = JSON.parse(localStorage.getItem('students')) || [];
+        students.splice(index, 1);
+        localStorage.setItem('students', JSON.stringify(students));
+        displayStudents();
+    }
+    //Edit the Record
+    function editStudent(index) {
+        var students = JSON.parse(localStorage.getItem('students')) || [];
+        var student = students[index];
+        document.querySelector('#name').value = student.name;
+        document.querySelector('#sid').value = student.sid;
+        document.querySelector('#inputclass').value = student.classinput;
+        document.querySelector('#rno').value = student.rno;
+        document.querySelector('#email').value = student.email;
+        document.querySelector('#phone').value = student.phone;
+        document.querySelector('#address').value = student.address;
+
+        // Remove the student from local storage to not show
+        students.splice(index, 1);
+        localStorage.setItem('students', JSON.stringify(students));
+
+        // Update the display //ramramji
+        displayStudents();
+    }
+    displayStudents();
+</script>
+
+</body>
+</html>
+<!--End of the code-->
