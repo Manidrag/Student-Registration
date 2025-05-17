@@ -48,11 +48,7 @@ Student The Registration/
 
 ---
 
-## Screenshots
 
-> *(Add screenshots here if desired)*
-
----
 
 ## Comments & Documentation
 
