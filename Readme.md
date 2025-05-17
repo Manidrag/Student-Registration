@@ -1,5 +1,6 @@
 # Student Registration System
-
+# Github Link:
+ https://github.com/Manidrag/Student-Registration
 ## Overview
 
 This project is a **Student Registration System** built with HTML, CSS, and JavaScript.  
